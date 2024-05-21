@@ -15,14 +15,103 @@ namespace Passfinder
             InitializeComponent();
         }
 
-        static async Task GenerateCounter(List<char> elements, HashSet<string> uniqueCombinations, string current, int maxLength, ProgressBar progressBar)
+
+
+
+        static long CalculateTotalCombinations(int elementCount, int maxLength)
         {
-            
+            long total = 0;
+            for (int i = 1; i <= maxLength; i++)
+            {
+                total += (long)Math.Pow(elementCount, i);
+            }
+            return total;
+        }
+
+        static async Task GenerateCombinationsInChunks(
+            List<char> elements,
+            string outputFilePath,
+            int maxLength,
+            int chunkSize)
+        {
+            // Initialize or clear the output file
+            File.WriteAllText(outputFilePath, string.Empty);
+
+            long processedCombinations = 0;
+
+            async Task ProcessChunk(string prefix, int length)
+            {
+                if (length == 0)
+                {
+                    await SaveChunkToFile(outputFilePath, prefix);
+                    processedCombinations++;
+                    Console.WriteLine($"Processed combinations: {processedCombinations}");
+                    return;
+                }
+
+                foreach (char element in elements)
+                {
+                    await ProcessChunk(prefix + element, length - 1);
+
+                    // Check if the number of processed combinations exceeds the chunk size
+                    if (processedCombinations % chunkSize == 0)
+                    {
+                        // Save the current progress to the file
+                        Console.WriteLine($"Saving progress to file...");
+                        await Task.Delay(100); // Simulate asynchronous file I/O operation
+                        Console.WriteLine($"Progress saved.");
+                    }
+                }
+            }
+
+            async Task SaveChunkToFile(string filePath, string combination)
+            {
+                // Append combination to the output file
+                using (StreamWriter sw = new StreamWriter(filePath, true))
+                {
+                    await sw.WriteLineAsync(combination);
+                }
+            }
+
+            // Generate combinations
+            await ProcessChunk("", maxLength);
+
+            Console.WriteLine("Combination generation completed.");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        static async Task GenerateCounter(List<char> elements, HashSet<string> uniqueCombinations, string current, int maxLength, ProgressBar progressBar, long total)
+        {
             if (current.Length > 0)
             {
                 uniqueCombinations.Add(current);
                 // Update progress bar value
-                
             }
 
             if (current.Length == maxLength)
@@ -32,15 +121,28 @@ namespace Passfinder
 
             foreach (char element in elements)
             {
-                
                 // Generate combinations recursively
-                await GenerateCounter(elements, uniqueCombinations, current + element, maxLength, progressBar);
-                progressBar.Value = uniqueCombinations.Count;
+                await GenerateCounter(elements, uniqueCombinations, current + element, maxLength, progressBar, total);
+                //progressBar.Value = (int)((uniqueCombinations.Count/10) / total)*100;
             }
         }
 
+        static async Task Save_To_File(string filePath, HashSet<string> uniqueCombinations)
+        {
+            // Perform sorting and file writing asynchronously
+            await Task.Run(async () =>
+            {
+                var sortedCombinations = uniqueCombinations
+                    .OrderBy(s => s.Length)
+                    .ThenBy(s => s)
+                    .ToList();
 
-        public static bool ExtractArciveFile(string archiveFilePath, string extractPath, string password)
+                //string filePath = Path.Combine(dir, "output.txt");
+                await File.WriteAllLinesAsync(filePath, sortedCombinations);
+            });
+        }
+
+       static bool ExtractArciveFile(string archiveFilePath, string extractPath, string password)
         {
             try
             {
@@ -57,7 +159,7 @@ namespace Passfinder
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                MessageBox.Show($"An error occurred: {ex.Message}");
                 return false;
             }
         }
@@ -71,8 +173,6 @@ namespace Passfinder
 
             int pos = int.Parse(positions.Text.ToString());
             List<char> passinput = [];
-            List<string> passoutput = [];
-            
 
             char[] char_k = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
                 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
@@ -164,23 +264,29 @@ namespace Passfinder
             }
 
             // sorting and saving to a txt file
-            int total = 0;
+            long total = 0;
             for( int i =1; i<= pos; i++)
             {
-                total += (int)Math.Pow(passinput.Count, i);
+                total += (long)Math.Pow(passinput.Count, i);
             }
-            HashSet<string> uniqueCombinations = [];
-            progressBar1.Minimum = 0;
-            progressBar1.Maximum = total;
+            //HashSet<string> uniqueCombinations = [];
+            //progressBar1.Minimum = 0;
+            //progressBar1.Maximum = 100;
             // Generate the counter
-            await GenerateCounter(passinput, uniqueCombinations, "", pos, progressBar1);
+            //await GenerateCounter(passinput, uniqueCombinations, "", pos, progressBar1, total/10);
+            
+            //List<char> elements = new List<char> { 'a', 'b', 'c', 'd', 'e' };
+            //string outputFilePath = "combinations.txt";
+            //int maxLength = 5; // Change this value for longer positions
+            int chunkSize = 100000; // Adjust chunk size as needed
+            //ProgressBar progressBar1 = new ProgressBar();
+            System.Diagnostics.Debug.WriteLine("START");
+            await GenerateCombinationsInChunks(passinput, filePath, pos, chunkSize);
+            System.Diagnostics.Debug.WriteLine("DONE");
 
-            // Sort the unique combinations first by position, then alphabetically
-            List<string> sortedCombinations = [.. uniqueCombinations
-                .OrderBy(s => s.Length)
-                .ThenBy(s => s)];
             // Write the sorted unique combinations to the file
-            File.WriteAllLines(filePath, sortedCombinations);
+            //await Save_To_File(filePath, uniqueCombinations);
+
 
 
             /////////////////////////////////////////
@@ -194,7 +300,8 @@ namespace Passfinder
 
             if (!File.Exists(archiveFilePath))
             {
-                if (zip.Checked) {
+                if (zip.Checked)
+                {
                     archiveFilePath += ".zip";
                 }
                 else if (rar.Checked)
@@ -240,9 +347,8 @@ namespace Passfinder
             }
 
             if (File.Exists(archiveFilePath))
-
             {
-
+                pass.Text = "In Progress...";
                 string extractPath = archiveFilePath.Split(".")[0];
                 if (!Directory.Exists(extractPath))
                 {
@@ -272,7 +378,7 @@ namespace Passfinder
                 else { MessageBox.Show("please Provide a txt file or use the Generate button to make one"); }
             }
             else { MessageBox.Show("please enter a correct archive name/directory"); }
-            
+
         }
     }
 }
