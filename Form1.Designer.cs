@@ -31,7 +31,7 @@
             generate = new Button();
             alphabetic_s = new CheckBox();
             alphabetic_k = new CheckBox();
-            positions = new TextBox();
+            positions_min = new TextBox();
             accented_latters_box = new CheckedListBox();
             label1 = new Label();
             label2 = new Label();
@@ -68,6 +68,8 @@
             label12 = new Label();
             pass = new Label();
             progressBar1 = new ProgressBar();
+            positions_max = new TextBox();
+            label13 = new Label();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -105,13 +107,15 @@
             alphabetic_k.Text = "Alphabetic Kapital";
             alphabetic_k.UseVisualStyleBackColor = true;
             // 
-            // positions
+            // positions_min
             // 
-            positions.Location = new Point(347, 340);
-            positions.Name = "positions";
-            positions.Size = new Size(123, 23);
-            positions.TabIndex = 3;
-            positions.Text = "1";
+            positions_min.Location = new Point(374, 340);
+            positions_min.Name = "positions_min";
+            positions_min.Size = new Size(26, 23);
+            positions_min.TabIndex = 3;
+            positions_min.Text = "1";
+            positions_min.TextChanged += positions_min_TextChanged;
+            positions_min.KeyPress += positions_min_KeyPress;
             // 
             // accented_latters_box
             // 
@@ -141,18 +145,18 @@
             label2.AutoSize = true;
             label2.Location = new Point(241, 343);
             label2.Name = "label2";
-            label2.Size = new Size(100, 15);
+            label2.Size = new Size(127, 15);
             label2.TabIndex = 5;
-            label2.Text = "positions number";
+            label2.Text = "positions number Min:";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(476, 343);
+            label3.Location = new Point(474, 343);
             label3.Name = "label3";
-            label3.Size = new Size(234, 15);
+            label3.Size = new Size(355, 15);
             label3.TabIndex = 6;
-            label3.Text = "how long is the password, example: 4sgk3k";
+            label3.Text = "how long is the password, example: min 1 and max 4, min <=max";
             // 
             // mathematical_symbols_box
             // 
@@ -493,6 +497,25 @@
             progressBar1.Size = new Size(390, 46);
             progressBar1.TabIndex = 10;
             // 
+            // positions_max
+            // 
+            positions_max.Location = new Point(442, 340);
+            positions_max.Name = "positions_max";
+            positions_max.Size = new Size(26, 23);
+            positions_max.TabIndex = 3;
+            positions_max.Text = "1";
+            positions_max.TextChanged += positions_max_TextChanged;
+            positions_max.KeyPress += positions_max_KeyPress;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(406, 343);
+            label13.Name = "label13";
+            label13.Size = new Size(30, 15);
+            label13.TabIndex = 5;
+            label13.Text = "Max";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -507,6 +530,7 @@
             Controls.Add(pass);
             Controls.Add(label12);
             Controls.Add(label10);
+            Controls.Add(label13);
             Controls.Add(label2);
             Controls.Add(label6);
             Controls.Add(label5);
@@ -520,7 +544,8 @@
             Controls.Add(accented_latters_box);
             Controls.Add(exceptions);
             Controls.Add(archive_path);
-            Controls.Add(positions);
+            Controls.Add(positions_max);
+            Controls.Add(positions_min);
             Controls.Add(numerals);
             Controls.Add(white_space);
             Controls.Add(alphabetic_k);
@@ -539,7 +564,7 @@
         private Button generate;
         private CheckBox alphabetic_s;
         private CheckBox alphabetic_k;
-        private TextBox positions;
+        private TextBox positions_min;
         private CheckedListBox accented_latters_box;
         private Label label1;
         private Label label2;
@@ -576,5 +601,7 @@
         private Label label12;
         private Label pass;
         private ProgressBar progressBar1;
+        private TextBox positions_max;
+        private Label label13;
     }
 }

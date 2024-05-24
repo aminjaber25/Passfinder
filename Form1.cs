@@ -31,6 +31,7 @@ namespace Passfinder
         static async Task GenerateCombinationsInChunks(
             List<char> elements,
             string outputFilePath,
+            int minLength,
             int maxLength,
             int chunkSize)
         {
@@ -38,45 +39,35 @@ namespace Passfinder
             File.WriteAllText(outputFilePath, string.Empty);
 
             long processedCombinations = 0;
-
-            async Task ProcessChunk(string prefix, int length)
+            for (int i = minLength; i <= maxLength; i++)
             {
-                if (length == 0)
+                async Task ProcessChunk(string prefix, int length)
                 {
-                    await SaveChunkToFile(outputFilePath, prefix);
-                    processedCombinations++;
-                    Console.WriteLine($"Processed combinations: {processedCombinations}");
-                    return;
-                }
-
-                foreach (char element in elements)
-                {
-                    await ProcessChunk(prefix + element, length - 1);
-
-                    // Check if the number of processed combinations exceeds the chunk size
-                    if (processedCombinations % chunkSize == 0)
+                    if (length == 0)
                     {
-                        // Save the current progress to the file
-                        Console.WriteLine($"Saving progress to file...");
-                        await Task.Delay(100); // Simulate asynchronous file I/O operation
-                        Console.WriteLine($"Progress saved.");
+                        await SaveChunkToFile(outputFilePath, prefix);
+                        processedCombinations++;
+                        System.Diagnostics.Debug.WriteLine($"Processed combinations: {processedCombinations}");
+                        return;
+                    }
+
+                    foreach (char element in elements)
+                    {
+                        await ProcessChunk(prefix + element, length - 1);
                     }
                 }
-            }
 
-            async Task SaveChunkToFile(string filePath, string combination)
-            {
-                // Append combination to the output file
-                using (StreamWriter sw = new StreamWriter(filePath, true))
+                async Task SaveChunkToFile(string filePath, string combination)
                 {
+                    // Append combination to the output file
+                    using StreamWriter sw = new StreamWriter(filePath, true);
+                    System.Diagnostics.Debug.WriteLine($"Saving progress to file...");
                     await sw.WriteLineAsync(combination);
                 }
+
+                // Start generating combinations
+                await ProcessChunk("", i);
             }
-
-            // Generate combinations
-            await ProcessChunk("", maxLength);
-
-            Console.WriteLine("Combination generation completed.");
         }
 
 
@@ -142,7 +133,7 @@ namespace Passfinder
             });
         }
 
-       static bool ExtractArciveFile(string archiveFilePath, string extractPath, string password)
+        static bool ExtractArciveFile(string archiveFilePath, string extractPath, string password)
         {
             try
             {
@@ -171,7 +162,8 @@ namespace Passfinder
         private async void Generate_Click(object sender, EventArgs e)
         {
 
-            int pos = int.Parse(positions.Text.ToString());
+            int pos_start = int.Parse(positions_min.Text.ToString());
+            int pos_last = int.Parse(positions_max.Text.ToString());
             List<char> passinput = [];
 
             char[] char_k = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
@@ -265,7 +257,7 @@ namespace Passfinder
 
             // sorting and saving to a txt file
             long total = 0;
-            for( int i =1; i<= pos; i++)
+            for (int i = 1; i <= pos_last - pos_start; i++)
             {
                 total += (long)Math.Pow(passinput.Count, i);
             }
@@ -274,14 +266,14 @@ namespace Passfinder
             //progressBar1.Maximum = 100;
             // Generate the counter
             //await GenerateCounter(passinput, uniqueCombinations, "", pos, progressBar1, total/10);
-            
+
             //List<char> elements = new List<char> { 'a', 'b', 'c', 'd', 'e' };
             //string outputFilePath = "combinations.txt";
             //int maxLength = 5; // Change this value for longer positions
-            int chunkSize = 100000; // Adjust chunk size as needed
+            int chunkSize = 10000; // Adjust chunk size as needed
             //ProgressBar progressBar1 = new ProgressBar();
             System.Diagnostics.Debug.WriteLine("START");
-            await GenerateCombinationsInChunks(passinput, filePath, pos, chunkSize);
+            await GenerateCombinationsInChunks(passinput, filePath, pos_start, pos_last, chunkSize);
             System.Diagnostics.Debug.WriteLine("DONE");
 
             // Write the sorted unique combinations to the file
@@ -379,6 +371,40 @@ namespace Passfinder
             }
             else { MessageBox.Show("please enter a correct archive name/directory"); }
 
+        }
+
+        private void positions_min_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsNumber(e.KeyChar);
+        }
+
+        private void positions_min_TextChanged(object sender, EventArgs e)
+        {
+            if (positions_min.Text == "")
+            {
+                positions_min.Text = "1";
+            }
+            if (int.Parse(positions_min.Text) > int.Parse(positions_max.Text))
+            {
+                positions_min.Text = positions_max.Text;
+            }
+        }
+
+        private void positions_max_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsNumber(e.KeyChar);
+        }
+
+        private void positions_max_TextChanged(object sender, EventArgs e)
+        {
+            if (positions_max.Text == "")
+            {
+                positions_max.Text = "1";
+            }
+            if (int.Parse(positions_min.Text) > int.Parse(positions_max.Text))
+            {
+                positions_min.Text = positions_max.Text;
+            }
         }
     }
 }
