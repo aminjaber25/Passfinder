@@ -1,10 +1,9 @@
-using SharpCompress.Archives;
+﻿using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Common;
 using SharpCompress.Readers;
-using System.Drawing;
-
+using System.IO;
 
 namespace Passfinder
 {
@@ -14,33 +13,15 @@ namespace Passfinder
         public Form1()
         {
             InitializeComponent();
-        }
-
-        static bool ExtractArciveFile(string archiveFilePath, string extractPath, string password)
-        {
-            try
+            if (gen_file.Text.Contains("") == true)
             {
-                using var archive = ArchiveFactory.Open(archiveFilePath, new ReaderOptions { Password = password });
-                foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
-                {
-                    entry.WriteToDirectory(extractPath, new ExtractionOptions()
-                    {
-                        ExtractFullPath = true,
-                        Overwrite = true
-                    });
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"An error occurred: {ex.Message}");
-                return false;
+                gen_file.Text = Path.Combine(AppContext.BaseDirectory, "counter_results.txt"); 
             }
         }
 
-        static readonly string main_dir = AppContext.BaseDirectory;
-        static readonly string filePath = Path.Combine(main_dir, "counter_results.txt");
-        private Generate gen = new Generate();
+        
+
+        private readonly Generate gen = new();
 
         private async void Generate_Click(object sender, EventArgs e)
         {
@@ -138,96 +119,57 @@ namespace Passfinder
                 }
             }
 
-            // sorting and saving to a txt file
-            /*long total = 0;
-            for (int i = 1; i <= pos_last - pos_start; i++)
-            {
-                total += (long)Math.Pow(passinput.Count, i);
-            }*/
-            //HashSet<string> uniqueCombinations = [];
-            //progressBar1.Minimum = 0;
-            //progressBar1.Maximum = 100;
-            // Generate the counter
-            //await GenerateCounter(passinput, uniqueCombinations, "", pos, progressBar1, total/10);
-
-            //List<char> elements = new List<char> { 'a', 'b', 'c', 'd', 'e' };
-            //string outputFilePath = "combinations.txt";
-            //int maxLength = 5; // Change this value for longer positions
-
-
-
-            //int chunkSize = 10000; // Adjust chunk size as needed
-            //ProgressBar progressBar1 = new ProgressBar();
-
             gen.Cancel(false);
-            System.Diagnostics.Debug.WriteLine("START");
-            //await Task.Run(async () => await ProcessChunk(prefix + element, length - 1));
-            await Task.Run(async () => await gen.GenerateCombinationsInChunks(passinput, filePath, pos_start, pos_last));
-            System.Diagnostics.Debug.WriteLine("DONE");
+
+            if (File.Exists(gen_file.Text))
+            {
+                if (Path.GetExtension(gen_file.Text).Equals(".txt", StringComparison.OrdinalIgnoreCase))
+                {
+                    System.Diagnostics.Debug.WriteLine("START");
+                    await Task.Run(() => gen.GenerateCombinations(passinput, gen_file.Text, pos_start, pos_last));
+                    System.Diagnostics.Debug.WriteLine("DONE");
+                }
+                else
+                {
+                    gen.Cancel(true);
+                }
+            }
+            else
+            {
+                gen.Cancel(true);
+            }
+
             
-            // Write the sorted unique combinations to the file
-            //await Save_To_File(filePath, uniqueCombinations);
-
-
-
-            /////////////////////////////////////////
+            
 
         }
 
         private void Run_Click(object sender, EventArgs e)
         {
-            StreamReader reader;
-            string archiveFilePath = archive_path.Text;
+            string[] validExtensions = [ ".zip", ".rar", ".7zip", ".7z",
+            ".unrar", ".unzip", ".bzip2",
+            ".gzip", ".tar", ".lzip", ".xz" ];
+            string filePath = @"C:\Users\Jamen\Downloads\OneDrive-2024-06-06\合集\a";
 
-            if (!File.Exists(archiveFilePath))
+            if (Runn.Check_archive(filePath, validExtensions) == "Unknown")
             {
-                if (zip.Checked)
-                {
-                    archiveFilePath += ".zip";
-                }
-                else if (rar.Checked)
-                {
-                    archiveFilePath += ".rar";
-                }
-                else if (szip.Checked)
-                {
-                    archiveFilePath += ".7zip";
-                }
-                else if (sz.Checked)
-                {
-                    archiveFilePath += ".7z";
-                }
-                else if (unrar.Checked)
-                {
-                    archiveFilePath += ".unrar";
-                }
-                else if (unzip.Checked)
-                {
-                    archiveFilePath += ".unzip";
-                }
-                else if (bzip2.Checked)
-                {
-                    archiveFilePath += ".bzip2";
-                }
-                else if (gzip.Checked)
-                {
-                    archiveFilePath += ".gzip";
-                }
-                else if (tar.Checked)
-                {
-                    archiveFilePath += ".tar";
-                }
-                else if (lzip.Checked)
-                {
-                    archiveFilePath += ".lzip";
-                }
-                else if (xz.Checked)
-                {
-                    archiveFilePath += ".xz";
-                }
-            }
+                if (zip.Checked) { filePath += ".zip"; }
+                else if (rar.Checked) { filePath += ".rar"; }
+                else if (szip.Checked) { filePath += ".7zip"; }
+                else if (sz.Checked) { filePath += ".7z"; }
+                else if (unrar.Checked) { filePath += ".unrar"; }
+                else if (unzip.Checked) { filePath += ".unzip"; }
+                else if (bzip2.Checked) { filePath += ".bzip2"; }
+                else if (gzip.Checked) { filePath += ".gzip"; }
+                else if (tar.Checked) { filePath += ".tar"; }
+                else if (lzip.Checked) { filePath += ".lzip"; }
+                else if (xz.Checked) { filePath += ".xz"; }
 
-            if (File.Exists(archiveFilePath))
+            }
+            
+            pass.Text = Runn.Unpacking(filePath, gen_file.Text);
+
+            /*if (File.Exists(archiveFilePath))
             {
                 pass.Text = "In Progress...";
                 string extractPath = archiveFilePath.Split(".")[0];
@@ -259,15 +201,15 @@ namespace Passfinder
                 else { MessageBox.Show("please Provide a txt file or use the Generate button to make one"); }
             }
             else { MessageBox.Show("please enter a correct archive name/directory"); }
-
+*/
         }
 
-        private void positions_min_KeyPress(object sender, KeyPressEventArgs e)
+        private void Positions_min_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !char.IsNumber(e.KeyChar);
         }
 
-        private void positions_min_TextChanged(object sender, EventArgs e)
+        private void Positions_min_TextChanged(object sender, EventArgs e)
         {
             if (positions_min.Text == "")
             {
@@ -279,12 +221,12 @@ namespace Passfinder
             }
         }
 
-        private void positions_max_KeyPress(object sender, KeyPressEventArgs e)
+        private void Positions_max_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !char.IsNumber(e.KeyChar);
         }
 
-        private void positions_max_TextChanged(object sender, EventArgs e)
+        private void Positions_max_TextChanged(object sender, EventArgs e)
         {
             if (positions_max.Text == "")
             {
@@ -296,22 +238,119 @@ namespace Passfinder
             }
         }
 
-        private void stop_Click(object sender, EventArgs e)
+        private void Stop_Click(object sender, EventArgs e)
         {
             gen.Cancel(true);
-            Pri wha = new Pri();
         }
     }
 }
 
 
-class Pri
+class Runn
 {
     // Konstruktor
-    public Pri()
+    public Runn(){  }
+    public static string Check_archive(string archiveFilePath, string[] validExtensions)
     {
-        // Initialisierung des Werts
-        MessageBox.Show("Halloha");
+
+        if (File.Exists(archiveFilePath) && Path.HasExtension(archiveFilePath))
+        {
+            foreach (string extension in validExtensions)
+            {
+
+                if (Path.GetExtension(archiveFilePath).Equals(extension, StringComparison.OrdinalIgnoreCase))
+                {
+                    return extension;
+                }
+            }
+        }
+        return "Unknown";
+    }
+
+    public static string Unpacking(string archiveFilePath, string password_file)
+    {
+
+        StreamReader reader;
+
+        string extractPath = archiveFilePath.Replace(Path.GetExtension(archiveFilePath), string.Empty);
+
+        if (!Directory.Exists(extractPath))
+        {
+            Directory.CreateDirectory(extractPath);
+        }
+
+        if (Password_needed(archiveFilePath))
+        {
+            if (File.Exists(password_file))
+            {
+                reader = new StreamReader(password_file);
+
+                string? line;
+                // Read and display lines from the file until the end of the file is reached
+                while ((line = reader.ReadLine()) != null)
+                {
+                    bool success = ExtractArciveFile(archiveFilePath, extractPath, line);
+                    if (success)
+                    {
+                        reader.Close();
+                        return line;
+
+                    }
+                    System.Diagnostics.Debug.WriteLine(line);
+                    Console.WriteLine(line);
+                }
+                reader.Close();
+            }
+
+            else { return "please Provide a txt file or use the Generate button to make one"; }
+        }
+        else
+        {
+            ExtractArciveFile(archiveFilePath, extractPath);
+            return "";
+        }
+        return "no fit password was found";
+
+    }
+    public static bool Password_needed(string archiveFilePath)
+    {
+        try
+        {
+            using var archive = ArchiveFactory.Open(archiveFilePath);
+            foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+            {
+                return entry.IsEncrypted;
+            }
+            return false;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"An error occurred: {ex.Message}");
+            return false;
+        }
+    }
+    public static bool ExtractArciveFile(string archiveFilePath, string extractPath, string password = "")
+    {
+        try
+        {
+            using var archive = ArchiveFactory.Open(archiveFilePath, new ReaderOptions { Password = password });
+            foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+            {
+                entry.WriteToDirectory(extractPath, new ExtractionOptions()
+                {
+                    ExtractFullPath = true,
+                    Overwrite = true
+                });
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            //System.Diagnostics.Debug.WriteLine($"An error occurred: {ex.Message}");
+            return false;
+            throw;
+            
+        }
     }
 }
 
@@ -319,10 +358,9 @@ class Generate
 {
     public Generate() { }
 
-    private bool stopRequested = false;
     private bool cancelling = false;
-    private object syncObject = new object();
-    public async Task GenerateCombinationsInChunks(
+    private readonly object syncObject = new();
+    public void GenerateCombinations(
             List<char> elements,
             string outputFilePath,
             int minLength,
@@ -335,13 +373,13 @@ class Generate
 
         for (int i = minLength; i <= maxLength; i++)
         {
-            async Task ProcessChunk(string prefix, int length)
+            void ProcessCombinations(string prefix, int length)
             {
                 if (length == 0)
                 {
-                    await SaveChunkToFile(outputFilePath, prefix);
+                    SaveToFile(outputFilePath, prefix);
                     processedCombinations++;
-                    System.Diagnostics.Debug.WriteLine($"Processed combinations: {processedCombinations}");               
+                    System.Diagnostics.Debug.WriteLine($"Processed combinations: {processedCombinations}");
                     return;
                 }
 
@@ -354,20 +392,19 @@ class Generate
                             break;
                         }
                     }
-                    await ProcessChunk(prefix + element, length - 1);
+                    ProcessCombinations(prefix + element, length - 1);
                 }
             }
 
-            async Task SaveChunkToFile(string filePath, string combination)
+            void SaveToFile(string filePath, string combination)
             {
                 // Append combination to the output file
-                using StreamWriter sw = new StreamWriter(filePath, true);
-                System.Diagnostics.Debug.WriteLine($"Saving progress to file...");
-                await sw.WriteLineAsync(combination);
+                using StreamWriter sw = new(filePath, true);
+                sw.WriteLineAsync(combination);
             }
 
             // Start generating combinations
-            await ProcessChunk("", i);
+            ProcessCombinations("", i);
         }
     }
     public void Cancel(bool req)
@@ -379,3 +416,4 @@ class Generate
     }
 
 }
+

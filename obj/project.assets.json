@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net8.0-windows7.0": {
+      "MimeTypeMapOfficial/1.0.17": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/MimeTypes.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/MimeTypes.dll": {}
+        }
+      },
       "SharpCompress/0.37.2": {
         "type": "package",
         "dependencies": {
@@ -26,6 +35,22 @@
     }
   },
   "libraries": {
+    "MimeTypeMapOfficial/1.0.17": {
+      "sha512": "f6DSQSYTckCjq1ifRj0fSLiEmDv+22uo4+JjTeb3MNZK3Ban1XLjA+bTQtD+/7x2NBEAGzBLYIRpS1IU2OgIAw==",
+      "type": "package",
+      "path": "mimetypemapofficial/1.0.17",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/MimeTypes.dll",
+        "lib/net48/MimeTypes.dll",
+        "lib/netcoreapp2.2/MimeTypes.dll",
+        "lib/netcoreapp3.1/MimeTypes.dll",
+        "lib/netstandard2.0/MimeTypes.dll",
+        "mimetypemapofficial.1.0.17.nupkg.sha512",
+        "mimetypemapofficial.nuspec"
+      ]
+    },
     "SharpCompress/0.37.2": {
       "sha512": "cFBpTct57aubLQXkdqMmgP8GGTFRh7fnRWP53lgE/EYUpDZJ27SSvTkdjB4OYQRZ20SJFpzczUquKLbt/9xkhw==",
       "type": "package",
@@ -65,6 +90,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0-windows7.0": [
+      "MimeTypeMapOfficial >= 1.0.17",
       "SharpCompress >= 0.37.2"
     ]
   },
@@ -120,6 +146,10 @@
       "net8.0-windows7.0": {
         "targetAlias": "net8.0-windows",
         "dependencies": {
+          "MimeTypeMapOfficial": {
+            "target": "Package",
+            "version": "[1.0.17, )"
+          },
           "SharpCompress": {
             "target": "Package",
             "version": "[0.37.2, )"

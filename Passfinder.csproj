@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
     <PackageReference Include="SharpCompress" Version="0.37.2" />
   </ItemGroup>
 

@@ -51,6 +51,10 @@
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {
+            "MimeTypeMapOfficial": {
+              "target": "Package",
+              "version": "[1.0.17, )"
+            },
             "SharpCompress": {
               "target": "Package",
               "version": "[0.37.2, )"

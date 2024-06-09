@@ -71,12 +71,14 @@
             positions_max = new TextBox();
             label13 = new Label();
             stop = new Button();
+            gen_file = new TextBox();
+            label14 = new Label();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // generate
             // 
-            generate.Location = new Point(239, 433);
+            generate.Location = new Point(241, 468);
             generate.Name = "generate";
             generate.Size = new Size(134, 46);
             generate.TabIndex = 0;
@@ -115,8 +117,8 @@
             positions_min.Size = new Size(26, 23);
             positions_min.TabIndex = 3;
             positions_min.Text = "1";
-            positions_min.TextChanged += positions_min_TextChanged;
-            positions_min.KeyPress += positions_min_KeyPress;
+            positions_min.TextChanged += Positions_min_TextChanged;
+            positions_min.KeyPress += Positions_min_KeyPress;
             // 
             // accented_latters_box
             // 
@@ -289,7 +291,7 @@
             // 
             // run
             // 
-            run.Location = new Point(804, 433);
+            run.Location = new Point(806, 468);
             run.Name = "run";
             run.Size = new Size(132, 46);
             run.TabIndex = 7;
@@ -302,13 +304,13 @@
             label10.AutoSize = true;
             label10.Location = new Point(239, 372);
             label10.Name = "label10";
-            label10.Size = new Size(82, 15);
+            label10.Size = new Size(104, 15);
             label10.TabIndex = 5;
-            label10.Text = "Enter File Path";
+            label10.Text = "Enter Archive Path";
             // 
             // archive_path
             // 
-            archive_path.Location = new Point(327, 369);
+            archive_path.Location = new Point(349, 369);
             archive_path.Name = "archive_path";
             archive_path.PlaceholderText = "C:\\...";
             archive_path.Size = new Size(461, 23);
@@ -477,7 +479,7 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(239, 406);
+            label12.Location = new Point(241, 441);
             label12.Name = "label12";
             label12.Size = new Size(102, 15);
             label12.TabIndex = 5;
@@ -486,14 +488,14 @@
             // pass
             // 
             pass.AutoSize = true;
-            pass.Location = new Point(347, 406);
+            pass.Location = new Point(349, 441);
             pass.Name = "pass";
             pass.Size = new Size(0, 15);
             pass.TabIndex = 5;
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(398, 433);
+            progressBar1.Location = new Point(400, 468);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(390, 46);
             progressBar1.TabIndex = 10;
@@ -505,8 +507,8 @@
             positions_max.Size = new Size(26, 23);
             positions_max.TabIndex = 3;
             positions_max.Text = "1";
-            positions_max.TextChanged += positions_max_TextChanged;
-            positions_max.KeyPress += positions_max_KeyPress;
+            positions_max.TextChanged += Positions_max_TextChanged;
+            positions_max.KeyPress += Positions_max_KeyPress;
             // 
             // label13
             // 
@@ -519,19 +521,36 @@
             // 
             // stop
             // 
-            stop.Location = new Point(942, 433);
+            stop.Location = new Point(944, 468);
             stop.Name = "stop";
             stop.Size = new Size(132, 46);
             stop.TabIndex = 11;
             stop.Text = "STOP";
             stop.UseVisualStyleBackColor = true;
-            stop.Click += stop_Click;
+            stop.Click += Stop_Click;
+            // 
+            // gen_file
+            // 
+            gen_file.Location = new Point(383, 398);
+            gen_file.Name = "gen_file";
+            gen_file.PlaceholderText = "C:\\...";
+            gen_file.Size = new Size(427, 23);
+            gen_file.TabIndex = 3;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(239, 401);
+            label14.Name = "label14";
+            label14.Size = new Size(138, 15);
+            label14.TabIndex = 5;
+            label14.Text = "Enter genetated File Path";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1246, 491);
+            ClientSize = new Size(1246, 540);
             Controls.Add(stop);
             Controls.Add(progressBar1);
             Controls.Add(panel1);
@@ -541,6 +560,7 @@
             Controls.Add(label8);
             Controls.Add(pass);
             Controls.Add(label12);
+            Controls.Add(label14);
             Controls.Add(label10);
             Controls.Add(label13);
             Controls.Add(label2);
@@ -555,6 +575,7 @@
             Controls.Add(greek_letters_box);
             Controls.Add(accented_latters_box);
             Controls.Add(exceptions);
+            Controls.Add(gen_file);
             Controls.Add(archive_path);
             Controls.Add(positions_max);
             Controls.Add(positions_min);
@@ -616,5 +637,7 @@
         private TextBox positions_max;
         private Label label13;
         private Button stop;
+        private TextBox gen_file;
+        private Label label14;
     }
 }
