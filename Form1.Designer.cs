@@ -70,6 +70,7 @@
             progressBar1 = new ProgressBar();
             positions_max = new TextBox();
             label13 = new Label();
+            stop = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -516,11 +517,22 @@
             label13.TabIndex = 5;
             label13.Text = "Max";
             // 
+            // stop
+            // 
+            stop.Location = new Point(942, 433);
+            stop.Name = "stop";
+            stop.Size = new Size(132, 46);
+            stop.TabIndex = 11;
+            stop.Text = "STOP";
+            stop.UseVisualStyleBackColor = true;
+            stop.Click += stop_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1246, 491);
+            Controls.Add(stop);
             Controls.Add(progressBar1);
             Controls.Add(panel1);
             Controls.Add(run);
@@ -603,5 +615,6 @@
         private ProgressBar progressBar1;
         private TextBox positions_max;
         private Label label13;
+        private Button stop;
     }
 }
