@@ -2,25 +2,37 @@
 using SharpCompress.Common;
 using SharpCompress.Readers;
 
+
 namespace Passfinder
 {
     public partial class Form1 : Form
     {
+        private readonly Generate gen = new();
+        private readonly Runn start_run = new();
 
         public Form1()
         {
             InitializeComponent();
-            if (gen_file.Text.Contains("") == true)
+            if (gen_file_textbox.Text.Contains("") == true)
             {
-                gen_file.Text = Path.Combine(AppContext.BaseDirectory, "counter_results.txt"); 
+                gen_file_textbox.Text = Path.Combine(AppContext.BaseDirectory, "counter_results.txt");
             }
+
+            FormClosing += Closing_Form!;
         }
 
-        
+        private void UpdateUI(double processedCombinations)
+        {
+            progressBar1.Value = (int)processedCombinations;
+        }
 
-        private readonly Generate gen = new();
+        private void Closing_Form(object sender, FormClosingEventArgs e)
+        {
+            gen.Cancel(true);
+            start_run.Cancel(true);
+        }
 
-        private async void Generate_Click(object sender, EventArgs e)
+        private void Generate_Click(object sender, EventArgs e)
         {
 
             int pos_start = int.Parse(positions_min.Text.ToString());
@@ -61,7 +73,6 @@ namespace Passfinder
                 passinput.Add(' ');
             }
 
-            // read from the checkbox to the collactor
             for (int i = 0; i < accented_latters_box.Items.Count; i++)
             {
                 if (accented_latters_box.GetItemChecked(i) == true)
@@ -102,8 +113,7 @@ namespace Passfinder
                 }
             }
 
-            // remove any exceptions if needed
-            string exceptions_latters = exceptions.Text;
+            string exceptions_latters = exceptions_textbox.Text;
 
             for (int i = 0; i < exceptions_latters.Length; i++)
             {
@@ -117,88 +127,74 @@ namespace Passfinder
             }
 
             gen.Cancel(false);
+            progressBar1.Value = 0;
+            var progress = new Progress<double>(value => UpdateUI(value));
 
-            if (File.Exists(gen_file.Text))
-            {
-                if (Path.GetExtension(gen_file.Text).Equals(".txt", StringComparison.OrdinalIgnoreCase))
-                {
-                    System.Diagnostics.Debug.WriteLine("START");
-                    await Task.Run(() => gen.GenerateCombinations(passinput, gen_file.Text, pos_start, pos_last));
-                    System.Diagnostics.Debug.WriteLine("DONE");
-                }
-                else
-                {
-                    gen.Cancel(true);
-                }
-            }
-            else
-            {
-                gen.Cancel(true);
-            }
-
-            
-            
+            generate.Enabled = false;
+            run.Enabled = false;
+            gen.GenerateCombinations(passinput, gen_file_textbox.Text, pos_start, pos_last, progress);
+            generate.Enabled = true;
+            run.Enabled = true;
 
         }
 
-        private void Run_Click(object sender, EventArgs e)
+        private async void Run_Click(object sender, EventArgs e)
         {
             string[] validExtensions = [ ".zip", ".rar", ".7zip", ".7z",
             ".unrar", ".unzip", ".bzip2",
             ".gzip", ".tar", ".lzip", ".xz" ];
-            string filePath = @"C:\Users\Jamen\Downloads\OneDrive-2024-06-06\合集\a";
+            string archive_path = archive_path_textbox.Text;
+            string Etension_Name = start_run.Check_archive(archive_path, validExtensions);
 
-            if (Runn.Check_archive(filePath, validExtensions) == "Unknown")
+            if (Etension_Name == ".zip") { zip.Checked = true; }
+            else if (Etension_Name == ".rar") { rar.Checked = true; }
+            else if (Etension_Name == ".7zip") { szip.Checked = true; }
+            else if (Etension_Name == ".7z") { sz.Checked = true; }
+            else if (Etension_Name == ".unrar") { unrar.Checked = true; }
+            else if (Etension_Name == ".unzip") { unzip.Checked = true; }
+            else if (Etension_Name == ".bzip2") { bzip2.Checked = true; }
+            else if (Etension_Name == ".gzip") { gzip.Checked = true; }
+            else if (Etension_Name == ".tar") { tar.Checked = true; }
+            else if (Etension_Name == ".lzip") { lzip.Checked = true; }
+            else if (Etension_Name == ".xz") { xz.Checked = true; }
+
+            else if (Etension_Name == "Unknown_File")
             {
-                if (zip.Checked) { filePath += ".zip"; }
-                else if (rar.Checked) { filePath += ".rar"; }
-                else if (szip.Checked) { filePath += ".7zip"; }
-                else if (sz.Checked) { filePath += ".7z"; }
-                else if (unrar.Checked) { filePath += ".unrar"; }
-                else if (unzip.Checked) { filePath += ".unzip"; }
-                else if (bzip2.Checked) { filePath += ".bzip2"; }
-                else if (gzip.Checked) { filePath += ".gzip"; }
-                else if (tar.Checked) { filePath += ".tar"; }
-                else if (lzip.Checked) { filePath += ".lzip"; }
-                else if (xz.Checked) { filePath += ".xz"; }
-
+                if (zip.Checked) { archive_path += ".zip"; }
+                else if (rar.Checked) { archive_path += ".rar"; }
+                else if (szip.Checked) { archive_path += ".7zip"; }
+                else if (sz.Checked) { archive_path += ".7z"; }
+                else if (unrar.Checked) { archive_path += ".unrar"; }
+                else if (unzip.Checked) { archive_path += ".unzip"; }
+                else if (bzip2.Checked) { archive_path += ".bzip2"; }
+                else if (gzip.Checked) { archive_path += ".gzip"; }
+                else if (tar.Checked) { archive_path += ".tar"; }
+                else if (lzip.Checked) { archive_path += ".lzip"; }
+                else if (xz.Checked) { archive_path += ".xz"; }
             }
-            
-            pass.Text = Runn.Unpacking(filePath, gen_file.Text);
-
-            /*if (File.Exists(archiveFilePath))
+            else if (Etension_Name == "Unknown_Extension")
             {
-                pass.Text = "In Progress...";
-                string extractPath = archiveFilePath.Split(".")[0];
-                if (!Directory.Exists(extractPath))
-                {
-                    Directory.CreateDirectory(extractPath);
-                }
-
-                // read file
-                if (File.Exists(filePath))
-                {
-                    reader = new StreamReader(filePath);
-
-                    string? line;
-                    // Read and display lines from the file until the end of the file is reached
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        bool success = ExtractArciveFile(archiveFilePath, extractPath, line);
-                        if (success)
-                        {
-                            pass.Text = line;
-                            MessageBox.Show($"The correct Password was: {line}");
-                            break;
-                        }
-                        //System.Diagnostics.Debug.WriteLine(line);
-                    }
-                    reader.Close();
-                }
-                else { MessageBox.Show("please Provide a txt file or use the Generate button to make one"); }
+                MessageBox.Show("Please check the file Extension");
             }
-            else { MessageBox.Show("please enter a correct archive name/directory"); }
-*/
+
+            if (start_run.Correct_Extension(archive_path))
+            {
+                pass_label.Text = "In Progress...";
+
+                listTextBox.Clear();
+                progressBar1.Value = 0;
+                start_run.Cancel(false);
+
+                generate.Enabled = false;
+                run.Enabled = false;
+                await start_run.Open_archive(archive_path, gen_file_textbox.Text, pass_label, listTextBox, progressBar1);
+                generate.Enabled = true;
+                run.Enabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Please provid/check the correct Extension");
+            }
         }
 
         private void Positions_min_KeyPress(object sender, KeyPressEventArgs e)
@@ -238,6 +234,7 @@ namespace Passfinder
         private void Stop_Click(object sender, EventArgs e)
         {
             gen.Cancel(true);
+            start_run.Cancel(true);
         }
     }
 }
@@ -245,9 +242,16 @@ namespace Passfinder
 
 class Runn
 {
-    public static string Check_archive(string archiveFilePath, string[] validExtensions)
-    {
+    private string line = string.Empty;
+    private readonly object syncObject = new();
+    private bool cancelling = false;
+    private double total_attempts;
+    private double pass_attempt;
+    private double progress_attempts;
+    private string correct_password = string.Empty;
 
+    public string Check_archive(string archiveFilePath, string[] validExtensions)
+    {
         if (File.Exists(archiveFilePath) && Path.HasExtension(archiveFilePath))
         {
             foreach (string extension in validExtensions)
@@ -258,15 +262,28 @@ class Runn
                     return extension;
                 }
             }
+            return "Unknown_Extension";
         }
-        return "Unknown";
+        return "Unknown_File";
     }
 
-    public static string Unpacking(string archiveFilePath, string password_file)
+    public bool Correct_Extension(string archiveFilePath)
+    {
+        bool iscorrect_extension = false;
+        try
+        {
+            using var archive = ArchiveFactory.Open(archiveFilePath);
+            iscorrect_extension = true;
+        }
+        catch { iscorrect_extension = false; }
+        return iscorrect_extension;
+    }
+
+    public async Task Open_archive(string archiveFilePath, string password_file, Label pass, RichTextBox listTextBox, ProgressBar progressBar)
     {
 
         StreamReader reader;
-
+      
         string extractPath = archiveFilePath.Replace(Path.GetExtension(archiveFilePath), string.Empty);
 
         if (!Directory.Exists(extractPath))
@@ -278,35 +295,65 @@ class Runn
         {
             if (File.Exists(password_file))
             {
+                
+                pass_attempt = 0;
+                total_attempts = File.ReadAllLines(password_file).Length;
+                progress_attempts = 0;
+
                 reader = new StreamReader(password_file);
 
-                string? line;
-                // Read and display lines from the file until the end of the file is reached
-                while ((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()!) != null)
                 {
-                    bool success = ExtractArciveFile(archiveFilePath, extractPath, line);
-                    if (success)
+                    if (await Check_Password(archiveFilePath, line))
                     {
+                        
+
+                        correct_password = line;
+                        pass.Text = "Extracting...";
+                        await ExtractArciveFile(archiveFilePath, extractPath);
                         reader.Close();
-                        return line;
+                        pass.Text = line;
+                        progressBar.Value = progressBar.Maximum;
+                        return;
+                    }
+
+                    if (!listTextBox.IsDisposed)
+                    {
+                        listTextBox.AppendText(line + "\n");
 
                     }
-                    System.Diagnostics.Debug.WriteLine(line);
-                    Console.WriteLine(line);
+                    lock (syncObject)
+                    {
+                        if (cancelling)
+                        {
+                            pass.Text = "the Process was Calnceled";
+                            return;
+                        }
+                    }
+                    pass_attempt++;
+                    progress_attempts = (pass_attempt / total_attempts) * 100;
+                    System.Diagnostics.Debug.WriteLine((int)progress_attempts);
+                    progressBar.Value = (int)progress_attempts;
                 }
                 reader.Close();
             }
 
-            else { return "please Provide a txt file or use the Generate button to make one"; }
+            else
+            {
+                pass.Text = "please Provide a txt file or use the Generate button to make one";
+            }
         }
         else
         {
-            ExtractArciveFile(archiveFilePath, extractPath);
-            return "";
+            MessageBox.Show("");
+            await ExtractArciveFile(archiveFilePath, extractPath);
+            pass.Text = "no password needed";
         }
-        return "no fit password was found";
+        pass.Text = "no fit password was found";
 
     }
+
+
     public static bool Password_needed(string archiveFilePath)
     {
         try
@@ -318,90 +365,160 @@ class Runn
             }
             return false;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            MessageBox.Show($"An error occurred: {ex.Message}");
             return false;
         }
     }
-    public static bool ExtractArciveFile(string archiveFilePath, string extractPath, string password = "")
+
+    public static Task<bool> Check_Password(string archiveFilePath, string password = "")
     {
-        try
+        return Task.Run(() =>
         {
+            bool iscorrect_password = false;
             using var archive = ArchiveFactory.Open(archiveFilePath, new ReaderOptions { Password = password });
-            foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+
+            var entry = archive.Entries.GetEnumerator();
+
+            if (entry.MoveNext())
             {
-                entry.WriteToDirectory(extractPath, new ExtractionOptions()
+                try
                 {
-                    ExtractFullPath = true,
-                    Overwrite = true
-                });
+                    using var stream = entry.Current.OpenEntryStream();
+                    byte[] buffer = new byte[1];
+                    stream.Read(buffer, 0, buffer.Length);
+
+                    iscorrect_password = true;
+                }
+                catch (CryptographicException)
+                {
+                    iscorrect_password = false;
+                }
             }
-            return true;
-        }
-        catch (Exception ex)
+            return iscorrect_password;
+        });
+    }
+    public Task<bool> ExtractArciveFile(string archiveFilePath, string extractPath)
+    {
+        return Task.Run(() =>
         {
-            return false;
+            bool success = false;
+            using var archive = ArchiveFactory.Open(archiveFilePath, new ReaderOptions { Password = correct_password });
+            
+            try
+            {
+                foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+                {
+                    entry.WriteToDirectory(extractPath, new ExtractionOptions()
+                    {
+                        ExtractFullPath = true,
+                        Overwrite = true
+                    });
+                }
+                success = true;
+            }
+            catch (CryptographicException)
+            {
+                success = false;
+            }
+            return success;
+        });
+    }
+
+    public void Cancel(bool req)
+    {
+        lock (syncObject) // Use lock for thread-safe flag update
+        {
+            cancelling = req;
         }
     }
 }
 
 class Generate
 {
-    public Generate() { }
-
     private bool cancelling = false;
     private readonly object syncObject = new();
-    public void GenerateCombinations(
+    private double processedCombinations;
+    private List<char> elements = [];
+    private string outputFilePath = string.Empty;
+    private int minLength;
+    private int maxLength;
+    private double totalCombinations;
+    private double percentage;
+
+    public long PossibleCombinations(List<char> elements)
+    {
+        long Combinations_size = 0;
+        for (int i = minLength; i <= maxLength; i++)
+        {
+            Combinations_size += (long)Math.Pow(elements.Count, i);
+        }
+        return Combinations_size;
+    }
+
+    public async void GenerateCombinations(
             List<char> elements,
             string outputFilePath,
             int minLength,
-            int maxLength)
+            int maxLength,
+            IProgress<double> progress)
     {
-        // Initialize or clear the output file
+        this.elements = elements;
+        this.outputFilePath = outputFilePath;
+        this.minLength = minLength;
+        this.maxLength = maxLength;
+
         File.WriteAllText(outputFilePath, string.Empty);
 
-        long processedCombinations = 0;
+        processedCombinations = 0;
+        totalCombinations = PossibleCombinations(elements);
+        percentage = 0;
 
-        for (int i = minLength; i <= maxLength; i++)
+        for (int i = this.minLength; i <= this.maxLength; i++)
         {
-            void ProcessCombinations(string prefix, int length)
-            {
-                if (length == 0)
-                {
-                    SaveToFile(outputFilePath, prefix);
-                    processedCombinations++;
-                    System.Diagnostics.Debug.WriteLine($"Processed combinations: {processedCombinations}");
-                    return;
-                }
-
-                foreach (char element in elements)
-                {
-                    lock (syncObject)
-                    {
-                        if (cancelling) // Check for cancellation request within lock
-                        {
-                            break;
-                        }
-                    }
-                    ProcessCombinations(prefix + element, length - 1);
-                }
-            }
-
-            void SaveToFile(string filePath, string combination)
-            {
-                // Append combination to the output file
-                using StreamWriter sw = new(filePath, true);
-                sw.WriteLineAsync(combination);
-            }
-
-            // Start generating combinations
-            ProcessCombinations("", i);
+            await Task.Run(() => ProcessCombinations("", i, progress));
         }
     }
+
+    public async Task ProcessCombinations(string prefix, int length, IProgress<double> progress)
+    {
+
+        if (length == 0)
+        {
+            SaveToFile(outputFilePath, prefix);
+            processedCombinations++;
+            percentage = (processedCombinations / totalCombinations) * 100.0;
+
+            System.Diagnostics.Debug.WriteLine($"Processed combinations: {percentage}");
+
+            progress.Report(percentage);
+
+            return;
+        }
+
+        foreach (char element in elements)
+        {
+            lock (syncObject)
+            {
+                if (cancelling)
+                {
+                    break;
+                }
+            }
+            await ProcessCombinations(prefix + element, length - 1, progress);
+        }
+        return;
+    }
+
+    public static void SaveToFile(string filePath, string combination)
+    {
+        using StreamWriter sw = new(filePath, true);
+        sw.WriteLineAsync(combination);
+    }
+
     public void Cancel(bool req)
     {
-        lock (syncObject) // Use lock for thread-safe flag update
+        lock (syncObject)
         {
             cancelling = req;
         }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Passfinder")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f7b6bea40371cc823546d6ebfe475bb31ce8b242")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8dbddc38f1f361b9bb7327a82e0d5b4c84a89d07")]
 [assembly: System.Reflection.AssemblyProductAttribute("Passfinder")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Passfinder")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

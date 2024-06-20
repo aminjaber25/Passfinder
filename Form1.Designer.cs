@@ -45,12 +45,12 @@
             greek_letters_box = new CheckedListBox();
             label7 = new Label();
             label8 = new Label();
-            exceptions = new TextBox();
+            exceptions_textbox = new TextBox();
             label9 = new Label();
             white_space = new CheckBox();
             run = new Button();
             label10 = new Label();
-            archive_path = new TextBox();
+            archive_path_textbox = new TextBox();
             zip = new RadioButton();
             panel1 = new Panel();
             xz = new RadioButton();
@@ -66,13 +66,14 @@
             label11 = new Label();
             numerals = new CheckBox();
             label12 = new Label();
-            pass = new Label();
+            pass_label = new Label();
             progressBar1 = new ProgressBar();
             positions_max = new TextBox();
             label13 = new Label();
             stop = new Button();
-            gen_file = new TextBox();
+            gen_file_textbox = new TextBox();
             label14 = new Label();
+            listTextBox = new RichTextBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -218,7 +219,7 @@
             currency_symbols_box.Location = new Point(1025, 76);
             currency_symbols_box.MultiColumn = true;
             currency_symbols_box.Name = "currency_symbols_box";
-            currency_symbols_box.Size = new Size(54, 220);
+            currency_symbols_box.Size = new Size(106, 220);
             currency_symbols_box.TabIndex = 4;
             // 
             // label6
@@ -262,13 +263,13 @@
             label8.TabIndex = 5;
             label8.Text = "Exceptions";
             // 
-            // exceptions
+            // exceptions_textbox
             // 
-            exceptions.Location = new Point(309, 311);
-            exceptions.Name = "exceptions";
-            exceptions.Size = new Size(161, 23);
-            exceptions.TabIndex = 3;
-            exceptions.Tag = "";
+            exceptions_textbox.Location = new Point(309, 311);
+            exceptions_textbox.Name = "exceptions_textbox";
+            exceptions_textbox.Size = new Size(161, 23);
+            exceptions_textbox.TabIndex = 3;
+            exceptions_textbox.Tag = "";
             // 
             // label9
             // 
@@ -308,13 +309,13 @@
             label10.TabIndex = 5;
             label10.Text = "Enter Archive Path";
             // 
-            // archive_path
+            // archive_path_textbox
             // 
-            archive_path.Location = new Point(349, 369);
-            archive_path.Name = "archive_path";
-            archive_path.PlaceholderText = "C:\\...";
-            archive_path.Size = new Size(461, 23);
-            archive_path.TabIndex = 3;
+            archive_path_textbox.Location = new Point(349, 369);
+            archive_path_textbox.Name = "archive_path_textbox";
+            archive_path_textbox.PlaceholderText = "C:\\...";
+            archive_path_textbox.Size = new Size(461, 23);
+            archive_path_textbox.TabIndex = 3;
             // 
             // zip
             // 
@@ -485,13 +486,13 @@
             label12.TabIndex = 5;
             label12.Text = "Correct Password:";
             // 
-            // pass
+            // pass_label
             // 
-            pass.AutoSize = true;
-            pass.Location = new Point(349, 441);
-            pass.Name = "pass";
-            pass.Size = new Size(0, 15);
-            pass.TabIndex = 5;
+            pass_label.AutoSize = true;
+            pass_label.Location = new Point(349, 441);
+            pass_label.Name = "pass_label";
+            pass_label.Size = new Size(0, 15);
+            pass_label.TabIndex = 5;
             // 
             // progressBar1
             // 
@@ -529,13 +530,13 @@
             stop.UseVisualStyleBackColor = true;
             stop.Click += Stop_Click;
             // 
-            // gen_file
+            // gen_file_textbox
             // 
-            gen_file.Location = new Point(383, 398);
-            gen_file.Name = "gen_file";
-            gen_file.PlaceholderText = "C:\\...";
-            gen_file.Size = new Size(427, 23);
-            gen_file.TabIndex = 3;
+            gen_file_textbox.Location = new Point(383, 398);
+            gen_file_textbox.Name = "gen_file_textbox";
+            gen_file_textbox.PlaceholderText = "C:\\...";
+            gen_file_textbox.Size = new Size(427, 23);
+            gen_file_textbox.TabIndex = 3;
             // 
             // label14
             // 
@@ -546,11 +547,20 @@
             label14.TabIndex = 5;
             label14.Text = "Enter genetated File Path";
             // 
+            // listTextBox
+            // 
+            listTextBox.Location = new Point(895, 317);
+            listTextBox.Name = "listTextBox";
+            listTextBox.Size = new Size(236, 119);
+            listTextBox.TabIndex = 12;
+            listTextBox.Text = "";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1246, 540);
+            Controls.Add(listTextBox);
             Controls.Add(stop);
             Controls.Add(progressBar1);
             Controls.Add(panel1);
@@ -558,7 +568,7 @@
             Controls.Add(label3);
             Controls.Add(label9);
             Controls.Add(label8);
-            Controls.Add(pass);
+            Controls.Add(pass_label);
             Controls.Add(label12);
             Controls.Add(label14);
             Controls.Add(label10);
@@ -574,9 +584,9 @@
             Controls.Add(mathematical_symbols_box);
             Controls.Add(greek_letters_box);
             Controls.Add(accented_latters_box);
-            Controls.Add(exceptions);
-            Controls.Add(gen_file);
-            Controls.Add(archive_path);
+            Controls.Add(exceptions_textbox);
+            Controls.Add(gen_file_textbox);
+            Controls.Add(archive_path_textbox);
             Controls.Add(positions_max);
             Controls.Add(positions_min);
             Controls.Add(numerals);
@@ -611,12 +621,12 @@
         private CheckedListBox greek_letters_box;
         private Label label7;
         private Label label8;
-        private TextBox exceptions;
+        private TextBox exceptions_textbox;
         private Label label9;
         private CheckBox white_space;
         private Button run;
         private Label label10;
-        private TextBox archive_path;
+        private TextBox archive_path_textbox;
         private RadioButton zip;
         private Panel panel1;
         private RadioButton szip;
@@ -632,12 +642,13 @@
         private RadioButton lzip;
         private CheckBox numerals;
         private Label label12;
-        private Label pass;
+        private Label pass_label;
         private ProgressBar progressBar1;
         private TextBox positions_max;
         private Label label13;
         private Button stop;
-        private TextBox gen_file;
+        private TextBox gen_file_textbox;
         private Label label14;
+        private RichTextBox listTextBox;
     }
 }
