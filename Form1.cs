@@ -1,9 +1,6 @@
 ﻿using SharpCompress.Archives;
-using SharpCompress.Archives.Rar;
-using SharpCompress.Archives.SevenZip;
 using SharpCompress.Common;
 using SharpCompress.Readers;
-using System.IO;
 
 namespace Passfinder
 {
@@ -248,8 +245,6 @@ namespace Passfinder
 
 class Runn
 {
-    // Konstruktor
-    public Runn(){  }
     public static string Check_archive(string archiveFilePath, string[] validExtensions)
     {
 
@@ -346,10 +341,7 @@ class Runn
         }
         catch (Exception ex)
         {
-            //System.Diagnostics.Debug.WriteLine($"An error occurred: {ex.Message}");
             return false;
-            throw;
-            
         }
     }
 }
