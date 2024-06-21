@@ -76,6 +76,7 @@
             listTextBox = new RichTextBox();
             generating_textBox = new TextBox();
             pass_textBox = new TextBox();
+            progress_textBox = new TextBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -658,8 +659,20 @@
             pass_textBox.BorderStyle = BorderStyle.FixedSingle;
             pass_textBox.Location = new Point(976, 433);
             pass_textBox.Name = "pass_textBox";
+            pass_textBox.ReadOnly = true;
             pass_textBox.Size = new Size(155, 23);
             pass_textBox.TabIndex = 14;
+            // 
+            // progress_textBox
+            // 
+            progress_textBox.BackColor = Color.Linen;
+            progress_textBox.BorderStyle = BorderStyle.FixedSingle;
+            progress_textBox.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            progress_textBox.Location = new Point(381, 448);
+            progress_textBox.Name = "progress_textBox";
+            progress_textBox.ReadOnly = true;
+            progress_textBox.Size = new Size(63, 23);
+            progress_textBox.TabIndex = 13;
             // 
             // Form1
             // 
@@ -668,6 +681,7 @@
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(1151, 540);
             Controls.Add(pass_textBox);
+            Controls.Add(progress_textBox);
             Controls.Add(generating_textBox);
             Controls.Add(listTextBox);
             Controls.Add(stop);
@@ -760,5 +774,6 @@
         private RichTextBox listTextBox;
         private TextBox generating_textBox;
         private TextBox pass_textBox;
+        private TextBox progress_textBox;
     }
 }
