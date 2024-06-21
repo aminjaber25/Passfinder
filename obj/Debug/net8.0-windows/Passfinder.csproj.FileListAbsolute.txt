@@ -20,3 +20,4 @@ C:\Users\Jamen\source\repos\Passfinder\obj\Debug\net8.0-windows\Passfinder.cspro
 C:\Users\Jamen\source\repos\Passfinder\obj\Debug\net8.0-windows\Passfinder.sourcelink.json
 C:\Users\Jamen\source\repos\Passfinder\obj\Debug\net8.0-windows\Passfinder.Form1.resources
 C:\Users\Jamen\source\repos\Passfinder\bin\Debug\net8.0-windows\MimeTypes.dll
+C:\Users\Jamen\source\repos\Passfinder\obj\Debug\net8.0-windows\Passfinder.Properties.Resources.resources

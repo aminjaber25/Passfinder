@@ -9,6 +9,8 @@ namespace Passfinder
     {
         private readonly Generate gen = new();
         private readonly Runn start_run = new();
+        private bool isGenerating = false;
+        private bool isCanceling = false;
 
         public Form1()
         {
@@ -32,9 +34,8 @@ namespace Passfinder
             start_run.Cancel(true);
         }
 
-        private void Generate_Click(object sender, EventArgs e)
+        private async void Generate_Click(object sender, EventArgs e)
         {
-
             int pos_start = int.Parse(positions_min.Text.ToString());
             int pos_last = int.Parse(positions_max.Text.ToString());
             List<char> passinput = [];
@@ -126,16 +127,16 @@ namespace Passfinder
                 }
             }
 
-            gen.Cancel(false);
+            isCanceling = gen.Cancel(false);
             progressBar1.Value = 0;
             var progress = new Progress<double>(value => UpdateUI(value));
-
-            generate.Enabled = false;
-            run.Enabled = false;
-            gen.GenerateCombinations(passinput, gen_file_textbox.Text, pos_start, pos_last, progress);
-            generate.Enabled = true;
-            run.Enabled = true;
-
+            generate.Enabled = run.Enabled = false;
+            generating_textBox.Text = "in Progress...";
+            isGenerating = true;
+            await gen.GenerateCombinations(passinput, gen_file_textbox.Text, pos_start, pos_last, progress);
+            isGenerating = false;
+            if (!isGenerating && !isCanceling) { generating_textBox.Text = "Done"; }
+            generate.Enabled = run.Enabled = true;
         }
 
         private async void Run_Click(object sender, EventArgs e)
@@ -179,17 +180,14 @@ namespace Passfinder
 
             if (start_run.Correct_Extension(archive_path))
             {
-                pass_label.Text = "In Progress...";
+                pass_textBox.Text = "In Progress...";
 
                 listTextBox.Clear();
                 progressBar1.Value = 0;
-                start_run.Cancel(false);
 
-                generate.Enabled = false;
-                run.Enabled = false;
-                await start_run.Open_archive(archive_path, gen_file_textbox.Text, pass_label, listTextBox, progressBar1);
-                generate.Enabled = true;
-                run.Enabled = true;
+                generate.Enabled = run.Enabled = start_run.Cancel(false);
+                await start_run.Open_archive(archive_path, gen_file_textbox.Text, pass_textBox, listTextBox, progressBar1);
+                generate.Enabled = run.Enabled = true;
             }
             else
             {
@@ -233,7 +231,12 @@ namespace Passfinder
 
         private void Stop_Click(object sender, EventArgs e)
         {
-            gen.Cancel(true);
+            if (isGenerating && gen.Cancel(true))
+            {
+                generating_textBox.Text = "Canceled";
+                isCanceling = true;
+            }
+
             start_run.Cancel(true);
         }
     }
@@ -279,11 +282,11 @@ class Runn
         return iscorrect_extension;
     }
 
-    public async Task Open_archive(string archiveFilePath, string password_file, Label pass, RichTextBox listTextBox, ProgressBar progressBar)
+    public async Task Open_archive(string archiveFilePath, string password_file, TextBox pass, RichTextBox listTextBox, ProgressBar progressBar)
     {
 
         StreamReader reader;
-      
+
         string extractPath = archiveFilePath.Replace(Path.GetExtension(archiveFilePath), string.Empty);
 
         if (!Directory.Exists(extractPath))
@@ -295,7 +298,7 @@ class Runn
         {
             if (File.Exists(password_file))
             {
-                
+
                 pass_attempt = 0;
                 total_attempts = File.ReadAllLines(password_file).Length;
                 progress_attempts = 0;
@@ -306,7 +309,7 @@ class Runn
                 {
                     if (await Check_Password(archiveFilePath, line))
                     {
-                        
+
 
                         correct_password = line;
                         pass.Text = "Extracting...";
@@ -345,7 +348,6 @@ class Runn
         }
         else
         {
-            MessageBox.Show("");
             await ExtractArciveFile(archiveFilePath, extractPath);
             pass.Text = "no password needed";
         }
@@ -404,7 +406,7 @@ class Runn
         {
             bool success = false;
             using var archive = ArchiveFactory.Open(archiveFilePath, new ReaderOptions { Password = correct_password });
-            
+
             try
             {
                 foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
@@ -425,12 +427,13 @@ class Runn
         });
     }
 
-    public void Cancel(bool req)
+    public bool Cancel(bool req)
     {
-        lock (syncObject) // Use lock for thread-safe flag update
+        lock (syncObject)
         {
             cancelling = req;
         }
+        return cancelling;
     }
 }
 
@@ -456,7 +459,7 @@ class Generate
         return Combinations_size;
     }
 
-    public async void GenerateCombinations(
+    public async Task GenerateCombinations(
             List<char> elements,
             string outputFilePath,
             int minLength,
@@ -478,6 +481,7 @@ class Generate
         {
             await Task.Run(() => ProcessCombinations("", i, progress));
         }
+        return;
     }
 
     public async Task ProcessCombinations(string prefix, int length, IProgress<double> progress)
@@ -516,12 +520,13 @@ class Generate
         sw.WriteLineAsync(combination);
     }
 
-    public void Cancel(bool req)
+    public bool Cancel(bool req)
     {
         lock (syncObject)
         {
             cancelling = req;
         }
+        return cancelling;
     }
 
 }

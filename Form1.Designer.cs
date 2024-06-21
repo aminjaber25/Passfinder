@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             generate = new Button();
             alphabetic_s = new CheckBox();
             alphabetic_k = new CheckBox();
@@ -66,7 +67,6 @@
             label11 = new Label();
             numerals = new CheckBox();
             label12 = new Label();
-            pass_label = new Label();
             progressBar1 = new ProgressBar();
             positions_max = new TextBox();
             label13 = new Label();
@@ -74,46 +74,67 @@
             gen_file_textbox = new TextBox();
             label14 = new Label();
             listTextBox = new RichTextBox();
+            generating_textBox = new TextBox();
+            pass_textBox = new TextBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // generate
             // 
+            generate.BackColor = Color.Goldenrod;
+            generate.Font = new Font("Bookman Old Style", 12F, FontStyle.Bold);
             generate.Location = new Point(241, 468);
             generate.Name = "generate";
             generate.Size = new Size(134, 46);
             generate.TabIndex = 0;
             generate.Text = "Generate";
-            generate.UseVisualStyleBackColor = true;
+            generate.UseVisualStyleBackColor = false;
             generate.Click += Generate_Click;
             // 
             // alphabetic_s
             // 
+            alphabetic_s.Appearance = Appearance.Button;
             alphabetic_s.AutoSize = true;
+            alphabetic_s.BackColor = Color.SandyBrown;
             alphabetic_s.Checked = true;
             alphabetic_s.CheckState = CheckState.Checked;
-            alphabetic_s.Location = new Point(92, 58);
+            alphabetic_s.FlatAppearance.BorderColor = Color.Gray;
+            alphabetic_s.FlatAppearance.CheckedBackColor = Color.LightSkyBlue;
+            alphabetic_s.FlatAppearance.MouseDownBackColor = SystemColors.GradientActiveCaption;
+            alphabetic_s.FlatStyle = FlatStyle.Flat;
+            alphabetic_s.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            alphabetic_s.ForeColor = SystemColors.ActiveCaptionText;
+            alphabetic_s.Location = new Point(92, 59);
             alphabetic_s.Name = "alphabetic_s";
-            alphabetic_s.Size = new Size(115, 19);
+            alphabetic_s.Size = new Size(109, 25);
             alphabetic_s.TabIndex = 1;
             alphabetic_s.Text = "Alphabetic Small";
-            alphabetic_s.UseVisualStyleBackColor = true;
+            alphabetic_s.UseVisualStyleBackColor = false;
             // 
             // alphabetic_k
             // 
+            alphabetic_k.Appearance = Appearance.Button;
             alphabetic_k.AutoSize = true;
+            alphabetic_k.BackColor = Color.SandyBrown;
             alphabetic_k.Checked = true;
             alphabetic_k.CheckState = CheckState.Checked;
-            alphabetic_k.Location = new Point(92, 83);
+            alphabetic_k.FlatAppearance.BorderColor = Color.Gray;
+            alphabetic_k.FlatAppearance.CheckedBackColor = Color.LightSkyBlue;
+            alphabetic_k.FlatAppearance.MouseDownBackColor = SystemColors.GradientActiveCaption;
+            alphabetic_k.FlatStyle = FlatStyle.Flat;
+            alphabetic_k.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            alphabetic_k.Location = new Point(92, 90);
             alphabetic_k.Name = "alphabetic_k";
-            alphabetic_k.Size = new Size(122, 19);
+            alphabetic_k.Size = new Size(117, 25);
             alphabetic_k.TabIndex = 2;
             alphabetic_k.Text = "Alphabetic Kapital";
-            alphabetic_k.UseVisualStyleBackColor = true;
+            alphabetic_k.UseVisualStyleBackColor = false;
             // 
             // positions_min
             // 
-            positions_min.Location = new Point(374, 340);
+            positions_min.BackColor = Color.Linen;
+            positions_min.BorderStyle = BorderStyle.FixedSingle;
+            positions_min.Location = new Point(379, 340);
             positions_min.Name = "positions_min";
             positions_min.Size = new Size(26, 23);
             positions_min.TabIndex = 3;
@@ -123,6 +144,7 @@
             // 
             // accented_latters_box
             // 
+            accented_latters_box.BackColor = Color.Linen;
             accented_latters_box.CheckOnClick = true;
             accented_latters_box.ColumnWidth = 60;
             accented_latters_box.Font = new Font("Segoe UI", 12F);
@@ -138,32 +160,42 @@
             // label1
             // 
             label1.AutoSize = true;
+            label1.BackColor = Color.SandyBrown;
+            label1.BorderStyle = BorderStyle.FixedSingle;
+            label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label1.Location = new Point(241, 58);
             label1.Name = "label1";
-            label1.Size = new Size(98, 15);
+            label1.Size = new Size(107, 17);
             label1.TabIndex = 5;
             label1.Text = "Accented Latters:";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(241, 343);
+            label2.BackColor = Color.SandyBrown;
+            label2.BorderStyle = BorderStyle.FixedSingle;
+            label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label2.Location = new Point(239, 343);
             label2.Name = "label2";
-            label2.Size = new Size(127, 15);
+            label2.Size = new Size(132, 17);
             label2.TabIndex = 5;
             label2.Text = "positions number Min:";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(474, 343);
+            label3.BackColor = Color.SandyBrown;
+            label3.BorderStyle = BorderStyle.FixedSingle;
+            label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label3.Location = new Point(482, 343);
             label3.Name = "label3";
-            label3.Size = new Size(355, 15);
+            label3.Size = new Size(369, 17);
             label3.TabIndex = 6;
             label3.Text = "how long is the password, example: min 1 and max 4, min <=max";
             // 
             // mathematical_symbols_box
             // 
+            mathematical_symbols_box.BackColor = Color.Linen;
             mathematical_symbols_box.CheckOnClick = true;
             mathematical_symbols_box.ColumnWidth = 60;
             mathematical_symbols_box.Font = new Font("Segoe UI", 12F);
@@ -179,14 +211,18 @@
             // label4
             // 
             label4.AutoSize = true;
+            label4.BackColor = Color.SandyBrown;
+            label4.BorderStyle = BorderStyle.FixedSingle;
+            label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label4.Location = new Point(703, 59);
             label4.Name = "label4";
-            label4.Size = new Size(131, 15);
+            label4.Size = new Size(137, 17);
             label4.TabIndex = 5;
             label4.Text = "Mathematical Symbols:";
             // 
             // special_symbols_box
             // 
+            special_symbols_box.BackColor = Color.Linen;
             special_symbols_box.CheckOnClick = true;
             special_symbols_box.ColumnWidth = 60;
             special_symbols_box.Font = new Font("Segoe UI", 12F);
@@ -202,14 +238,18 @@
             // label5
             // 
             label5.AutoSize = true;
+            label5.BackColor = Color.SandyBrown;
+            label5.BorderStyle = BorderStyle.FixedSingle;
+            label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label5.Location = new Point(895, 58);
             label5.Name = "label5";
-            label5.Size = new Size(95, 15);
+            label5.Size = new Size(100, 17);
             label5.TabIndex = 5;
             label5.Text = "Special Symbols:";
             // 
             // currency_symbols_box
             // 
+            currency_symbols_box.BackColor = Color.Linen;
             currency_symbols_box.CheckOnClick = true;
             currency_symbols_box.ColumnWidth = 60;
             currency_symbols_box.Font = new Font("Segoe UI", 12F);
@@ -225,14 +265,18 @@
             // label6
             // 
             label6.AutoSize = true;
+            label6.BackColor = Color.SandyBrown;
+            label6.BorderStyle = BorderStyle.FixedSingle;
+            label6.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label6.Location = new Point(1025, 58);
             label6.Name = "label6";
-            label6.Size = new Size(106, 15);
+            label6.Size = new Size(111, 17);
             label6.TabIndex = 5;
             label6.Text = "Currency Symbols:";
             // 
             // greek_letters_box
             // 
+            greek_letters_box.BackColor = Color.Linen;
             greek_letters_box.CheckOnClick = true;
             greek_letters_box.ColumnWidth = 60;
             greek_letters_box.Font = new Font("Segoe UI", 12F);
@@ -248,24 +292,32 @@
             // label7
             // 
             label7.AutoSize = true;
+            label7.BackColor = Color.SandyBrown;
+            label7.BorderStyle = BorderStyle.FixedSingle;
+            label7.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label7.Location = new Point(570, 58);
             label7.Name = "label7";
-            label7.Size = new Size(78, 15);
+            label7.Size = new Size(90, 17);
             label7.TabIndex = 5;
             label7.Text = "Greek Letters:";
             // 
             // label8
             // 
             label8.AutoSize = true;
+            label8.BackColor = Color.SandyBrown;
+            label8.BorderStyle = BorderStyle.FixedSingle;
+            label8.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label8.Location = new Point(239, 314);
             label8.Name = "label8";
-            label8.Size = new Size(64, 15);
+            label8.Size = new Size(69, 17);
             label8.TabIndex = 5;
             label8.Text = "Exceptions";
             // 
             // exceptions_textbox
             // 
-            exceptions_textbox.Location = new Point(309, 311);
+            exceptions_textbox.BackColor = Color.Linen;
+            exceptions_textbox.BorderStyle = BorderStyle.FixedSingle;
+            exceptions_textbox.Location = new Point(314, 312);
             exceptions_textbox.Name = "exceptions_textbox";
             exceptions_textbox.Size = new Size(161, 23);
             exceptions_textbox.TabIndex = 3;
@@ -274,44 +326,61 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(476, 314);
+            label9.BackColor = Color.SandyBrown;
+            label9.BorderStyle = BorderStyle.FixedSingle;
+            label9.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label9.Location = new Point(481, 314);
             label9.Name = "label9";
-            label9.Size = new Size(312, 15);
+            label9.Size = new Size(327, 17);
             label9.TabIndex = 5;
             label9.Text = "specific characters or numbers you do not wish to include";
             // 
             // white_space
             // 
+            white_space.Appearance = Appearance.Button;
             white_space.AutoSize = true;
-            white_space.Location = new Point(92, 133);
+            white_space.BackColor = Color.SandyBrown;
+            white_space.FlatAppearance.BorderColor = Color.Gray;
+            white_space.FlatAppearance.CheckedBackColor = Color.LightSkyBlue;
+            white_space.FlatAppearance.MouseDownBackColor = SystemColors.GradientActiveCaption;
+            white_space.FlatStyle = FlatStyle.Flat;
+            white_space.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            white_space.Location = new Point(92, 152);
             white_space.Name = "white_space";
-            white_space.Size = new Size(91, 19);
+            white_space.Size = new Size(87, 25);
             white_space.TabIndex = 2;
             white_space.Text = "White Space";
-            white_space.UseVisualStyleBackColor = true;
+            white_space.UseVisualStyleBackColor = false;
             // 
             // run
             // 
-            run.Location = new Point(806, 468);
+            run.BackColor = Color.YellowGreen;
+            run.Font = new Font("Bookman Old Style", 12F, FontStyle.Bold);
+            run.Location = new Point(861, 468);
             run.Name = "run";
             run.Size = new Size(132, 46);
             run.TabIndex = 7;
             run.Text = "RUN";
-            run.UseVisualStyleBackColor = true;
+            run.UseVisualStyleBackColor = false;
             run.Click += Run_Click;
             // 
             // label10
             // 
             label10.AutoSize = true;
+            label10.BackColor = Color.SandyBrown;
+            label10.BorderStyle = BorderStyle.FixedSingle;
+            label10.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label10.Location = new Point(239, 372);
             label10.Name = "label10";
-            label10.Size = new Size(104, 15);
+            label10.Size = new Size(113, 17);
             label10.TabIndex = 5;
             label10.Text = "Enter Archive Path";
             // 
             // archive_path_textbox
             // 
-            archive_path_textbox.Location = new Point(349, 369);
+            archive_path_textbox.BackColor = Color.Linen;
+            archive_path_textbox.BorderStyle = BorderStyle.FixedSingle;
+            archive_path_textbox.Location = new Point(358, 370);
             archive_path_textbox.Name = "archive_path_textbox";
             archive_path_textbox.PlaceholderText = "C:\\...";
             archive_path_textbox.Size = new Size(461, 23);
@@ -331,6 +400,8 @@
             // 
             // panel1
             // 
+            panel1.BackColor = Color.Linen;
+            panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(xz);
             panel1.Controls.Add(lzip);
             panel1.Controls.Add(tar);
@@ -343,7 +414,7 @@
             panel1.Controls.Add(rar);
             panel1.Controls.Add(label11);
             panel1.Controls.Add(zip);
-            panel1.Location = new Point(92, 174);
+            panel1.Location = new Point(92, 183);
             panel1.Name = "panel1";
             panel1.Size = new Size(115, 292);
             panel1.TabIndex = 9;
@@ -467,43 +538,47 @@
             // 
             // numerals
             // 
+            numerals.Appearance = Appearance.Button;
             numerals.AutoSize = true;
+            numerals.BackColor = Color.SandyBrown;
             numerals.Checked = true;
             numerals.CheckState = CheckState.Checked;
-            numerals.Location = new Point(92, 108);
+            numerals.FlatAppearance.BorderColor = Color.Gray;
+            numerals.FlatAppearance.CheckedBackColor = Color.LightSkyBlue;
+            numerals.FlatAppearance.MouseDownBackColor = SystemColors.GradientActiveCaption;
+            numerals.FlatStyle = FlatStyle.Flat;
+            numerals.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            numerals.Location = new Point(92, 121);
             numerals.Name = "numerals";
-            numerals.Size = new Size(77, 19);
+            numerals.Size = new Size(70, 25);
             numerals.TabIndex = 2;
             numerals.Text = "Numerals";
-            numerals.UseVisualStyleBackColor = true;
+            numerals.UseVisualStyleBackColor = false;
             // 
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(241, 441);
+            label12.BackColor = Color.SandyBrown;
+            label12.BorderStyle = BorderStyle.FixedSingle;
+            label12.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label12.Location = new Point(861, 435);
             label12.Name = "label12";
-            label12.Size = new Size(102, 15);
+            label12.Size = new Size(109, 17);
             label12.TabIndex = 5;
             label12.Text = "Correct Password:";
             // 
-            // pass_label
-            // 
-            pass_label.AutoSize = true;
-            pass_label.Location = new Point(349, 441);
-            pass_label.Name = "pass_label";
-            pass_label.Size = new Size(0, 15);
-            pass_label.TabIndex = 5;
-            // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(400, 468);
+            progressBar1.Location = new Point(381, 477);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(390, 46);
+            progressBar1.Size = new Size(474, 37);
             progressBar1.TabIndex = 10;
             // 
             // positions_max
             // 
-            positions_max.Location = new Point(442, 340);
+            positions_max.BackColor = Color.Linen;
+            positions_max.BorderStyle = BorderStyle.FixedSingle;
+            positions_max.Location = new Point(450, 340);
             positions_max.Name = "positions_max";
             positions_max.Size = new Size(26, 23);
             positions_max.TabIndex = 3;
@@ -514,25 +589,32 @@
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(406, 343);
+            label13.BackColor = Color.SandyBrown;
+            label13.BorderStyle = BorderStyle.FixedSingle;
+            label13.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label13.Location = new Point(411, 343);
             label13.Name = "label13";
-            label13.Size = new Size(30, 15);
+            label13.Size = new Size(33, 17);
             label13.TabIndex = 5;
             label13.Text = "Max";
             // 
             // stop
             // 
-            stop.Location = new Point(944, 468);
+            stop.BackColor = Color.Tomato;
+            stop.Font = new Font("Bookman Old Style", 12F, FontStyle.Bold);
+            stop.Location = new Point(999, 468);
             stop.Name = "stop";
             stop.Size = new Size(132, 46);
             stop.TabIndex = 11;
             stop.Text = "STOP";
-            stop.UseVisualStyleBackColor = true;
+            stop.UseVisualStyleBackColor = false;
             stop.Click += Stop_Click;
             // 
             // gen_file_textbox
             // 
-            gen_file_textbox.Location = new Point(383, 398);
+            gen_file_textbox.BackColor = Color.Linen;
+            gen_file_textbox.BorderStyle = BorderStyle.FixedSingle;
+            gen_file_textbox.Location = new Point(395, 399);
             gen_file_textbox.Name = "gen_file_textbox";
             gen_file_textbox.PlaceholderText = "C:\\...";
             gen_file_textbox.Size = new Size(427, 23);
@@ -541,25 +623,52 @@
             // label14
             // 
             label14.AutoSize = true;
+            label14.BackColor = Color.SandyBrown;
+            label14.BorderStyle = BorderStyle.FixedSingle;
+            label14.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label14.Location = new Point(239, 401);
             label14.Name = "label14";
-            label14.Size = new Size(138, 15);
+            label14.Size = new Size(150, 17);
             label14.TabIndex = 5;
             label14.Text = "Enter genetated File Path";
             // 
             // listTextBox
             // 
-            listTextBox.Location = new Point(895, 317);
+            listTextBox.BackColor = Color.Linen;
+            listTextBox.Location = new Point(895, 302);
             listTextBox.Name = "listTextBox";
-            listTextBox.Size = new Size(236, 119);
+            listTextBox.Size = new Size(236, 116);
             listTextBox.TabIndex = 12;
             listTextBox.Text = "";
+            // 
+            // generating_textBox
+            // 
+            generating_textBox.BackColor = Color.Linen;
+            generating_textBox.BorderStyle = BorderStyle.FixedSingle;
+            generating_textBox.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            generating_textBox.Location = new Point(241, 448);
+            generating_textBox.Name = "generating_textBox";
+            generating_textBox.ReadOnly = true;
+            generating_textBox.Size = new Size(134, 23);
+            generating_textBox.TabIndex = 13;
+            // 
+            // pass_textBox
+            // 
+            pass_textBox.BackColor = Color.Linen;
+            pass_textBox.BorderStyle = BorderStyle.FixedSingle;
+            pass_textBox.Location = new Point(976, 433);
+            pass_textBox.Name = "pass_textBox";
+            pass_textBox.Size = new Size(155, 23);
+            pass_textBox.TabIndex = 14;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1246, 540);
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            ClientSize = new Size(1151, 540);
+            Controls.Add(pass_textBox);
+            Controls.Add(generating_textBox);
             Controls.Add(listTextBox);
             Controls.Add(stop);
             Controls.Add(progressBar1);
@@ -568,7 +677,6 @@
             Controls.Add(label3);
             Controls.Add(label9);
             Controls.Add(label8);
-            Controls.Add(pass_label);
             Controls.Add(label12);
             Controls.Add(label14);
             Controls.Add(label10);
@@ -594,6 +702,7 @@
             Controls.Add(alphabetic_k);
             Controls.Add(alphabetic_s);
             Controls.Add(generate);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             Text = "Form1";
             panel1.ResumeLayout(false);
@@ -642,7 +751,6 @@
         private RadioButton lzip;
         private CheckBox numerals;
         private Label label12;
-        private Label pass_label;
         private ProgressBar progressBar1;
         private TextBox positions_max;
         private Label label13;
@@ -650,5 +758,7 @@
         private TextBox gen_file_textbox;
         private Label label14;
         private RichTextBox listTextBox;
+        private TextBox generating_textBox;
+        private TextBox pass_textBox;
     }
 }
