@@ -671,7 +671,7 @@
             progress_textBox.Location = new Point(381, 448);
             progress_textBox.Name = "progress_textBox";
             progress_textBox.ReadOnly = true;
-            progress_textBox.Size = new Size(63, 23);
+            progress_textBox.Size = new Size(111, 23);
             progress_textBox.TabIndex = 13;
             // 
             // Form1
