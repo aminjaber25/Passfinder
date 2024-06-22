@@ -142,11 +142,8 @@ namespace Passfinder
 
         private async void Run_Click(object sender, EventArgs e)
         {
-            string[] validExtensions = [ ".zip", ".rar", ".7zip", ".7z",
-            ".unrar", ".unzip", ".bzip2",
-            ".gzip", ".tar", ".lzip", ".xz" ];
             string archive_path = archive_path_textbox.Text;
-            string Etension_Name = start_run.Check_archive(archive_path, validExtensions);
+            string Etension_Name = start_run.Check_archive(archive_path);
 
             if (Etension_Name == ".zip") { zip.Checked = true; }
             else if (Etension_Name == ".rar") { rar.Checked = true; }
@@ -246,6 +243,9 @@ namespace Passfinder
 
 class Runn
 {
+    private readonly string[] validExtensions = [ ".zip", ".rar", ".7zip", ".7z",
+                                                  ".unrar", ".unzip", ".bzip2",
+                                                  ".gzip", ".tar", ".lzip", ".xz" ];
     private string line = string.Empty;
     private readonly object syncObject = new();
     private bool cancelling = false;
@@ -253,8 +253,9 @@ class Runn
     private double pass_attempt;
     private double progress_attempts;
     private string correct_password = string.Empty;
+    private bool iscorrect_extension;
 
-    public string Check_archive(string archiveFilePath, string[] validExtensions)
+    public string Check_archive(string archiveFilePath)
     {
         if (File.Exists(archiveFilePath) && Path.HasExtension(archiveFilePath))
         {
@@ -273,7 +274,7 @@ class Runn
 
     public bool Correct_Extension(string archiveFilePath)
     {
-        bool iscorrect_extension = false;
+        iscorrect_extension = false;
         try
         {
             using var archive = ArchiveFactory.Open(archiveFilePath);
@@ -374,7 +375,7 @@ class Runn
         }
     }
 
-    public static Task<bool> Check_Password(string archiveFilePath, string password = "")
+    public static Task<bool> Check_Password(string archiveFilePath, string password)
     {
         return Task.Run(() =>
         {
@@ -447,18 +448,7 @@ class Generate
     private string outputFilePath = string.Empty;
     private int minLength;
     private int maxLength;
-    private double totalCombinations;
     private double percentage;
-
-    public long PossibleCombinations(List<char> elements)
-    {
-        long Combinations_size = 0;
-        for (int i = minLength; i <= maxLength; i++)
-        {
-            Combinations_size += (long)Math.Pow(elements.Count, i);
-        }
-        return Combinations_size;
-    }
 
     public async Task GenerateCombinations(
             List<char> elements,
@@ -475,34 +465,35 @@ class Generate
         File.WriteAllText(outputFilePath, string.Empty);
 
         processedCombinations = 0;
-        totalCombinations = PossibleCombinations(elements);
         percentage = 0;
 
         for (int i = this.minLength; i <= this.maxLength; i++)
         {
-            await Task.Run(() => ProcessCombinations("", i, progress));
+            await Task.Run(() => GenerateCombinations(i, progress));
         }
         return;
     }
 
-    public async Task ProcessCombinations(string prefix, int length, IProgress<double> progress)
+    private Task GenerateCombinations(int length, IProgress<double> progress)
     {
+        double totalCombinations = Math.Pow(elements.Count, length);
+        double charCount = elements.Count;
 
-        if (length == 0)
+
+        for (double i = 0; i < totalCombinations; i++)
         {
-            SaveToFile(outputFilePath, prefix);
-            processedCombinations++;
-            percentage = (processedCombinations / totalCombinations) * 100.0;
-
-            System.Diagnostics.Debug.WriteLine($"Processed combinations: {percentage}");
-
+            char[] combination = new char[length];
+            double index = i;
+            for (int j = 0; j < length; j++)
+            {
+                combination[j] = elements[(int)(index % charCount)];
+                index /= charCount;
+            }
+            
+            percentage = ((i+1) / totalCombinations) * 100.0;
+            System.Diagnostics.Debug.WriteLine($"Processed combinations: {i}");
             progress.Report(percentage);
-
-            return;
-        }
-
-        foreach (char element in elements)
-        {
+            SaveToFile(new string(combination));
             lock (syncObject)
             {
                 if (cancelling)
@@ -510,14 +501,13 @@ class Generate
                     break;
                 }
             }
-            await ProcessCombinations(prefix + element, length - 1, progress);
         }
-        return;
+        return Task.CompletedTask;
     }
 
-    public static void SaveToFile(string filePath, string combination)
+    public void SaveToFile(string combination)
     {
-        using StreamWriter sw = new(filePath, true);
+        using StreamWriter sw = new(outputFilePath, true);
         sw.WriteLineAsync(combination);
     }
 
