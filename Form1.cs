@@ -25,7 +25,7 @@ namespace Passfinder
 
         private void UpdateUI(double processedCombinations)
         {
-            progress_textBox.Text = $"{Math.Round(processedCombinations,12).ToString()}%";
+            progress_textBox.Text = $"{Math.Round(processedCombinations,12)}%";
             progressBar1.Value = (int)processedCombinations;
         }
 
