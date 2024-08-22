@@ -718,7 +718,7 @@
             Controls.Add(generate);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
-            Text = "Form1";
+            Text = "PassFinder";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);
