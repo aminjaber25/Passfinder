@@ -1,6 +1,7 @@
 ﻿using SharpCompress.Archives;
 using SharpCompress.Common;
 using SharpCompress.Readers;
+using System.Linq;
 
 
 namespace Passfinder
@@ -309,10 +310,8 @@ class Runn
 
                 while ((line = reader.ReadLine()!) != null)
                 {
-                    if (await Check_Password(archiveFilePath, line))
+                    if (await Task.Run(() => Check_Password(archiveFilePath, line)))
                     {
-
-
                         correct_password = line;
                         pass.Text = "Extracting...";
                         await ExtractArciveFile(archiveFilePath, extractPath);
@@ -375,57 +374,82 @@ class Runn
         }
     }
 
-    public static Task<bool> Check_Password(string archiveFilePath, string password)
+    public static bool Check_Password(string archiveFilePath, string password)
     {
-        return Task.Run(() =>
-        {
-            bool iscorrect_password = false;
+
             using var archive = ArchiveFactory.Open(archiveFilePath, new ReaderOptions { Password = password });
 
-            var entry = archive.Entries.GetEnumerator();
+        // Get the total number of entries
+        int totalEntries = archive.Entries.Count();
 
-            if (entry.MoveNext())
+        // Calculate how many entries to read (20% of the total entries)
+        int entriesToRead = (int)(totalEntries * 0.2);
+        entriesToRead = Math.Max(entriesToRead, 1); // Ensure at least 1 entry is read
+
+        int readCount = 0;
+
+        // Iterate through the entries
+        foreach (var entry in archive.Entries)
+        {
+            if (!entry.IsDirectory)
             {
                 try
                 {
-                    using var stream = entry.Current.OpenEntryStream();
-                    byte[] buffer = new byte[1];
-                    stream.Read(buffer, 0, buffer.Length);
+                    // Open the entry stream
+                    using var stream = entry.OpenEntryStream();
 
-                    iscorrect_password = true;
+                    // Read the entry stream into memory (small portion or entire entry)
+                    using var memoryStream = new MemoryStream();
+                    stream.CopyTo(memoryStream); // Copy to memory to trigger decompression
+
+                    // Increment the read count
+                    readCount++;
+
+                    // If we've read enough entries, we assume the password is correct
+                    if (readCount >= entriesToRead)
+                    {
+                        return true;
+                    }
                 }
-                catch (CryptographicException)
+                catch (SharpCompress.Compressors.Deflate.ZlibException)
                 {
-                    iscorrect_password = false;
+                    // Zlib exception indicates a bad password or corrupt file
+                    return false;
+                }
+                catch (SharpCompress.Common.ArchiveException)
+                {
+                    // Catch any archive-specific exceptions (e.g., bad password)
+                    return false;
+                }
+                catch (Exception)
+                {
+                    // Catch other exceptions, e.g., IO errors, corrupt archive
+                    return false;
                 }
             }
-            return iscorrect_password;
-        });
+        }
+
+        // If we couldn't read enough entries, return false
+        return false;
     }
     public Task<bool> ExtractArciveFile(string archiveFilePath, string extractPath)
     {
         return Task.Run(() =>
         {
-            bool success = false;
             using var archive = ArchiveFactory.Open(archiveFilePath, new ReaderOptions { Password = correct_password });
 
-            try
+
+            foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
             {
-                foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+                entry.WriteToDirectory(extractPath, new ExtractionOptions()
                 {
-                    entry.WriteToDirectory(extractPath, new ExtractionOptions()
-                    {
-                        ExtractFullPath = true,
-                        Overwrite = true
-                    });
-                }
-                success = true;
+                    ExtractFullPath = true,
+                    Overwrite = true
+                });
             }
-            catch (CryptographicException)
-            {
-                success = false;
-            }
-            return success;
+            return true;
+
+
         });
     }
 
