@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passfinder", "Passfinder.csproj", "{2919F14A-3792-4B91-9547-303E18B67BC1}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "..\Setup\Setup.vdproj", "{C4C78BCD-22BD-487E-82E6-7C9295CC9136}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Pass_Finder", "..\Pass_Finder\Pass_Finder.vdproj", "{0340053A-2210-4C16-BFF7-EADDC735EFD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,8 +17,8 @@ Global
 		{2919F14A-3792-4B91-9547-303E18B67BC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2919F14A-3792-4B91-9547-303E18B67BC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2919F14A-3792-4B91-9547-303E18B67BC1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C4C78BCD-22BD-487E-82E6-7C9295CC9136}.Debug|Any CPU.ActiveCfg = Debug
-		{C4C78BCD-22BD-487E-82E6-7C9295CC9136}.Release|Any CPU.ActiveCfg = Release
+		{0340053A-2210-4C16-BFF7-EADDC735EFD5}.Debug|Any CPU.ActiveCfg = Debug
+		{0340053A-2210-4C16-BFF7-EADDC735EFD5}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
